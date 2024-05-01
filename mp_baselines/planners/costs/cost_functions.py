@@ -83,6 +83,7 @@ class CostComposite(Cost):
                 else:
                     trajs_tmp = trajs
                 cost_tmp = weight_cost * cost(trajs_tmp, q_pos=q_pos, q_vel=q_vel, H_positions=H_positions, **kwargs)
+                import pdb; pdb.set_trace()
                 cost_total += cost_tmp
             return cost_total
         else:
