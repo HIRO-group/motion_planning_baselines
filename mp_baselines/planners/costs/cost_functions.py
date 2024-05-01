@@ -88,6 +88,7 @@ class CostComposite(Cost):
             return cost_total
         else:
             cost_l = []
+            # import pdb; pdb.set_trace()
             for cost in self.cost_l:
                 if trajs_interpolated is not None:
                     # Compute only collision costs with interpolated trajectories.
@@ -153,11 +154,13 @@ class CostCollision(Cost):
             n_support_points,
             field=None,
             sigma_coll=None,
+            curobo_fn = None,
             **kwargs
     ):
         super().__init__(robot, n_support_points, **kwargs)
         self.field = field
         self.sigma_coll = sigma_coll
+        self.curobo_fn = curobo_fn
 
         self.set_cost_factors()
 
@@ -166,7 +169,8 @@ class CostCollision(Cost):
         self.obst_factor = FieldFactor(
             self.n_dof,
             self.sigma_coll,
-            [1, None]  # take the whole trajectory except for the first point
+            [1, None],  # take the whole trajectory except for the first point
+            curobo_fn=self.curobo_fn
         )
 
     def eval(self, trajs, q_pos=None, q_vel=None, H_positions=None, **observation):

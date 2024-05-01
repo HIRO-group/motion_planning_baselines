@@ -8,11 +8,13 @@ class FieldFactor:
             n_dof,
             sigma,
             traj_range,
+            curobo_fn = None
     ):
         self.sigma = sigma
         self.n_dof = n_dof
         self.traj_range = traj_range
         self.K = 1. / (sigma**2)
+        self.curobo_fn = curobo_fn
 
     def get_error(
             self,
@@ -36,7 +38,7 @@ class FieldFactor:
             states = q_trajs[:, self.traj_range[0]:self.traj_range[1], :self.n_dof].reshape(-1, self.n_dof)
         q_pos_new = q_pos[:, self.traj_range[0]:self.traj_range[1], :]
         length = q_pos_new.shape[-2]
-        error = field.compute_cost(q_pos_new, states, **kwargs).reshape(batch, length)
+        error = field.compute_cost(q_pos_new, states, curobo_fn=self.curobo_fn, **kwargs).reshape(batch, length)
 
         if calc_jacobian:
             # compute jacobian wrt to the error of the interpolated trajectory
